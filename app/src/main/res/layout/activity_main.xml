@@ -55,6 +55,7 @@
             android:text="@string/sign_in"
             android:textColor="@android:color/white"
             android:background="@color/btnSignActive"
+            android:backgroundTintMode="add"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -64,8 +65,7 @@
             app:shadowColor="@android:color/black"
             app:shadowEnabled="true"
             app:shadowHeight="5dp"-->
+
     </LinearLayout>
 
-
-    
 </RelativeLayout>
