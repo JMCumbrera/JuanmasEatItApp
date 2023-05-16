@@ -9,10 +9,9 @@ import com.dam.juanmaseatitapp.Interface.ItemClickListener;
 import com.dam.juanmaseatitapp.R;
 
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-    public TextView food_name;
-    public ImageView food_image;
-
+    // Atributos de clase
+    public TextView food_name, food_price;
+    public ImageView food_image, fav_image;
     private ItemClickListener itemClickListener;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -24,6 +23,8 @@ public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         food_name = (TextView)itemView.findViewById(R.id.food_name);
         food_image = (ImageView)itemView.findViewById(R.id.food_image);
+        fav_image = (ImageView)itemView.findViewById(R.id.fav);
+        food_price = (TextView)itemView.findViewById(R.id.food_price);
 
         itemView.setOnClickListener(this);
     }

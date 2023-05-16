@@ -23,23 +23,23 @@
             <!--app:expandedTitleTextAppearance="@android:color/transparent"-->
             <!-- Por alguna razón, esto último no es detectado correctamente -->
 
-        <ImageView
-            android:id="@+id/food_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            app:layout_collapseMode="parallax" />
+            <ImageView
+                android:id="@+id/food_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:title="Nombre de la comida"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_collapseMode="parallax" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:title="Nombre de la comida"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="parallax" />
 
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
         
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:src="@drawable/baseline_attach_money_24"
+                            android:src="@drawable/baseline_euro_24"
                             android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" />
@@ -112,16 +112,29 @@
                                 android:layout_height="wrap_content" />
 
                     </LinearLayout>
-                    
-                    <NumberPicker
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_button"
                         android:layout_width="100dp"
                         android:layout_height="30dp"
-                        android:id="@+id/number_button"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginBottom="18dp">
-
-                    </NumberPicker>
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="18dp"
+                        app:np_width="220dp"
+                        app:np_height="90dp"
+                        app:np_dividerColor="@color/colorPrimary"
+                        app:np_max="20"
+                        app:np_min="0"
+                        app:np_selectedTextColor="@color/colorPrimary"
+                        app:np_selectedTextSize="15dp"
+                        app:np_textColor="@color/colorPrimary"
+                        app:np_textSize="10dp"
+                        app:np_value="5"
+                        app:np_wheelItemCount="23"
+                        app:np_itemSpacing="2dp"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_orientation="horizontal"
+                        />
 
                 </LinearLayout>
 

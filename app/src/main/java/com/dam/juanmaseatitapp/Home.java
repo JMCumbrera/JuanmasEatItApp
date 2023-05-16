@@ -1,79 +1,66 @@
 package com.dam.juanmaseatitapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.dam.juanmaseatitapp.Common.Common;
-import com.dam.juanmaseatitapp.Interface.ItemClickListener;
-import com.dam.juanmaseatitapp.Model.Category;
-import com.dam.juanmaseatitapp.ViewHolder.MenuViewHolder;
 import com.dam.juanmaseatitapp.databinding.ActivityHomeBinding;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    // Atributos
+import java.util.HashMap;
+import java.util.Map;
+
+import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
+
+public class Home extends AppCompatActivity {
+    // Attributos de clase
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityHomeBinding binding;
-    FirebaseDatabase database;
-    DatabaseReference category;
+    private ActivityHomeBinding homeBinding;
     TextView txtFullName;
-    RecyclerView recycler_menu;
-    RecyclerView.LayoutManager layoutManager;
-    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        setContentView(R.layout.activity_home);
+        homeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(homeBinding.getRoot());
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = homeBinding.appBarHome.toolbar;
         toolbar.setTitle("Menu");
-        // setSupportActionBar(toolbar);
         setSupportActionBar(toolbar);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // Paper
+        Paper.init(this);
 
-        toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
+        drawerLayout = homeBinding.drawerLayout;
+        NavigationView navView = homeBinding.navView;
+        navView.bringToFront();
 
-        // Inicializamos la BD
-        database = FirebaseDatabase.getInstance();
-        category = database.getReference("Category");
-
-        ((FloatingActionButton) findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
+        homeBinding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent cartIntent = new Intent(Home.this, Cart.class);
@@ -84,61 +71,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, /*R.id.nav_gallery,*/ R.id.nav_order_status)
                 .setOpenableLayout(drawerLayout)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupWithNavController(navView, navController);
 
         // Ponemos el nombre del usuario actual
-        View headerView = navigationView.getHeaderView(0);
+        View headerView = navView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
-
-        // Cargamos el menú
-        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
-
-        loadMenu();
-    }
-
-    private void loadMenu() {
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class, category) {
-            @Override
-            protected void populateViewHolder(MenuViewHolder viewHolder, Category model, int position) {
-                viewHolder.txtMenuName.setText(model.getName());
-
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(viewHolder.imageView);
-
-                Category clickItem = model;
-
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        // Get CategoryId and send to new Activity
-                        Intent foodList = new Intent(Home.this, FoodList.class);
-
-                        // Because CategoryId is key, so we just get the key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-                    }
-                });
-            }
-        };
-        recycler_menu.setAdapter(adapter);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -146,110 +91,102 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
-        // inflater.inflate(R.menu.activity_main_drawer, menu);
         return true;
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        toggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        toggle.onConfigurationChanged(newConfig);
-    }
-
-    /*@Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // Buscamos los elementos del menu
-        MenuItem itemNavMenu = menu.findItem(R.id.nav_menu);
-        MenuItem itemNavCart = menu.findItem(R.id.nav_cart);
-        MenuItem itemNavOrders = menu.findItem(R.id.nav_orders);
-        MenuItem itemNavLogOut = menu.findItem(R.id.nav_log_out);
-
-        // Y los activamos
-        itemNavMenu.setEnabled(true);
-        itemNavCart.setEnabled(true);
-        itemNavOrders.setEnabled(true);
-        itemNavLogOut.setEnabled(true);
-
-        return super.onPrepareOptionsMenu(menu);
-    }*/
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //Manejar los clics del elemento de vista de navegación aquí
-        /*int id = item.getItemId();
-
-        MenuItem itemNavMenu = item.getSubMenu().findItem(R.id.nav_menu);
-        MenuItem itemNavCart = item.getSubMenu().findItem(R.id.nav_cart);
-        MenuItem itemNavOrders = item.getSubMenu().findItem(R.id.nav_orders);
-        MenuItem itemNavLogOut = item.getSubMenu().findItem(R.id.nav_log_out);
-        MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-
-            }
-        };
-
-        itemNavCart.setOnMenuItemClickListener(listener);
-        itemNavMenu.setOnMenuItemClickListener(listener);
-        itemNavOrders.setOnMenuItemClickListener(listener);
-        itemNavLogOut.setOnMenuItemClickListener(listener);
-
-        Toast.makeText(this, "ID Menu: " + R.id.nav_menu, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "ID Cart: " + R.id.nav_cart, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "ID Order: " + R.id.nav_orders, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "ID LogOut: " + R.id.nav_log_out, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "ID Item: " + item.getItemId(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "ID NavView: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-
-        drawerLayout.closeDrawer(GravityCompat.START);*/
-        Toast.makeText(this, "Asdf", Toast.LENGTH_SHORT).show();
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        };
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        return super.onMenuOpened(featureId, menu);
-    }
-
+    /**
+     * Método que permite al ActionMenu del menú Home funcionar. Este método escuchará los clicks
+     * realizados en elementos del ActionMenu tales como el LogOut o el cambio de contraseña.
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
+        //homeBinding.navView.bringToFront();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
+        homeBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case (R.id.nav_menu):
+                        navController.navigate(R.id.nav_home);
+                        Toast.makeText(Home.this, "Menu", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case (R.id.nav_cart):
+                        //navController.navigate(R.id.nav_cart);
+                        Intent intentCart = new Intent(Home.this, Cart.class);
+                        startActivity(intentCart);
+                        return true;
+                    case (R.id.nav_orders):
+                        navController.navigate(R.id.nav_order_status);
+                        Toast.makeText(Home.this, "Order status", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case (R.id.nav_log_out):
+                        // Borramos el usuario y la clave guardadas por la función de recordar usuario
+                        Paper.book().destroy();
+
+                        Intent intentLogout = new Intent(Home.this, MainActivity.class);
+                        startActivity(intentLogout);
+                        finish();
+                        return true;
+                    case (R.id.nav_change_pwd):
+                        showChangePasswordDialog();
+                        return true;
+                    default: return false;
+                }
+            };
+        });
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case (R.id.nav_menu):
-                Toast.makeText(getApplicationContext(), "Funcionó", Toast.LENGTH_SHORT).show();
-                return true;
-            case (R.id.nav_cart):
-                Intent cartIntent = new Intent(Home.this, Cart.class);
-                startActivity(cartIntent);
-                return true;
-            case (R.id.nav_orders):
-                Intent orderIntent = new Intent(Home.this, OrderStatus.class);
-                startActivity(orderIntent);
-                return true;
-            case (R.id.nav_log_out):
-                // Logout
-                Intent signIn = new Intent(Home.this, SignIn.class);
-                signIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(signIn);
-                return true;
-            default: return false;
-        }
+    private void showChangePasswordDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle("CAMBIAR CONTRASEÑA");
+        alertDialog.setMessage("Por favor, rellene toda la información");
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
+
+        MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
+        MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
+        MaterialEditText edtRepeatPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatPassword);
+
+        alertDialog.setView(layout_pwd);
+
+        // Botón
+        alertDialog.setPositiveButton("CAMBIAR", (dialog, which) -> {
+            // Cambiamos la contraseña aquí
+
+            android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
+            waitingDialog.show();
+
+            // Comprobamos la contraseña anterior
+            if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())) {
+                // Comprobamos la contraseña nueva y la repetimos
+                if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())) {
+                    Map<String, Object> passwordUpdate = new HashMap<>();
+                    passwordUpdate.put("Password", edtNewPassword.getText().toString());
+
+                    // Llevamos la actualización
+                    DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
+                    user.child(Common.currentUser.getPhone())
+                            .updateChildren(passwordUpdate)
+                            .addOnCompleteListener(task -> {
+                                waitingDialog.dismiss();
+                                Toast.makeText(Home.this, "La contraseña fue actualizada", Toast.LENGTH_SHORT).show();
+                            }).addOnFailureListener(e -> Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                } else {
+                    waitingDialog.dismiss();
+                    Toast.makeText(Home.this, "Las contraseñas introducidas no coinciden", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                waitingDialog.dismiss();
+                Toast.makeText(Home.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alertDialog.setNegativeButton("CANCELAR", (dialog, which) -> dialog.dismiss());
+
+        alertDialog.show();
     }
 }

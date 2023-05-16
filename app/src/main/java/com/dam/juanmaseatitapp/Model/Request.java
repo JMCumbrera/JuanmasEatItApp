@@ -7,25 +7,22 @@ import java.util.List;
  */
 public class Request {
     // Atributos relacionados con el envío
-    private String phone;
-    private String name;
-    private String address;
-    private String total;
-    private String status;
+    private String phone, name, address, total, status, comment;
     private List<Order> foods;
 
     // Constructores
     public Request() {}
 
-    public Request(String phone, String name, String address, String total, List<Order> foods) {
+    public Request(String phone, String name, String address, String total, List<Order> foods, String comment) {
         this.phone = phone;
         this.name = name;
         this.address = address;
         this.total = total;
         this.foods = foods;
-        // Será 0 poer defecto
+        // Será 0 por defecto
         // 0: Pedido realizado, 1: Pedido en envío, 2: Pedido enviado
         this.status = "0";
+        this.comment = comment;
     }
 
     // Getters y Setters
@@ -46,4 +43,7 @@ public class Request {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 }

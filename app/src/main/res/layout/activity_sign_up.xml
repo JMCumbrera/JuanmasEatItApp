@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/white"
-            android:text="123456789"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:inputType="phone"
@@ -38,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/white"
-            android:text="Nombre"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:inputType="text"
@@ -55,10 +53,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/white"
-            android:text="1234"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:inputType="textPassword"
+            app:met_baseColor="@android:color/white"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="11"
+            app:met_primaryColor="@android:color/white"
+            app:met_singleLineEllipsis="true"
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtSecureCode"
+            android:hint="Código de seguridad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:textSize="34sp"
+            android:inputType="text"
             app:met_baseColor="@android:color/white"
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="11"
@@ -82,9 +95,5 @@
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         app:cornerRadius="4dp" />
-        <!--app:buttonColor="@color/btnSignUp"
-        app:shadowColor="@android:color/black"
-        app:shadowEnabled="true"
-        app:shadowHeight="5dp"-->
 
 </RelativeLayout>

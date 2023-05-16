@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -13,11 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JuanmasEatItApp"
         tools:targetApi="31">
+        <service
+            android:name=".Service.ListenOrder"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="TODO" />
+
         <activity
-            android:name=".OrderStatus"
+            android:name=".OrderStatusFragment"
             android:exported="false" />
         <activity
-            android:name=".CartAdapter"
+            android:name=".ViewHolder.CartAdapter"
             android:exported="false" />
         <activity
             android:name=".Cart"

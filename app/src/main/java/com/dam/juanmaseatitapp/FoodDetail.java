@@ -2,14 +2,15 @@ package com.dam.juanmaseatitapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Database.Database;
 import com.dam.juanmaseatitapp.Model.Food;
 import com.dam.juanmaseatitapp.Model.Order;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shawnlin.numberpicker.NumberPicker;
 import com.squareup.picasso.Picasso;
 
 public class FoodDetail extends AppCompatActivity {
@@ -27,8 +29,7 @@ public class FoodDetail extends AppCompatActivity {
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
     FloatingActionButton btnCart;
-    NumberPicker numberPicker;
-
+    com.shawnlin.numberpicker.NumberPicker numberPicker;
     String foodId = "";
     FirebaseDatabase database;
     DatabaseReference foods;
@@ -37,8 +38,8 @@ public class FoodDetail extends AppCompatActivity {
     Food currentFood;
 
     // Cantidad de comida pedida mínima y máxima
-    int MAX_FOOD_QUANTITY = 20;
-    int MIN_FOOD_QUANTITY = 0;
+    public static int MAX_FOOD_QUANTITY = 20;
+    public static int MIN_FOOD_QUANTITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,11 @@ public class FoodDetail extends AppCompatActivity {
         foods = database.getReference("Food");
 
         // Init view
-        numberPicker = (NumberPicker)findViewById(R.id.number_button);
+        numberPicker = (com.shawnlin.numberpicker.NumberPicker) findViewById(R.id.number_button);
+
+        // Establecemos el color del divisor
+        numberPicker.setDividerColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        numberPicker.setDividerColorResource(R.color.colorPrimary);
 
         // Numeros máximo y mínimo del selector de cantidades
         numberPicker.setMinValue(MIN_FOOD_QUANTITY);
@@ -60,19 +65,17 @@ public class FoodDetail extends AppCompatActivity {
         btnCart = (FloatingActionButton)findViewById(R.id.btnCart);
 
         // Función de compra
-        btnCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Database(getBaseContext()).addToCart(new Order(
-                        foodId,
-                        currentFood.getName(),
-                        Integer.toString(numberPicker.getValue()),
-                        currentFood.getPrice(),
-                        currentFood.getDiscount()
-                ));
+        btnCart.setOnClickListener(view -> {
+            new Database(getBaseContext()).addToCart(new Order(
+                    foodId,
+                    currentFood.getName(),
+                    Integer.toString(numberPicker.getValue()),
+                    currentFood.getPrice(),
+                    currentFood.getDiscount(),
+                    currentFood.getImage()
+            ));
 
-                Toast.makeText(FoodDetail.this, "Añadido al carro", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(FoodDetail.this, "Añadido al carro", Toast.LENGTH_SHORT).show();
         });
 
         food_description = (TextView)findViewById(R.id.food_description);
@@ -88,7 +91,10 @@ public class FoodDetail extends AppCompatActivity {
         if (getIntent() != null)
             foodId = getIntent().getStringExtra("FoodId");
         if (!foodId.isEmpty()) {
-            getDetailFood(foodId);
+            if (Common.isConnectedToInternet(this))
+                getDetailFood(foodId);
+            else
+                Toast.makeText(FoodDetail.this, "Por favor, compruebe su conexión a Internet", Toast.LENGTH_SHORT).show();
         }
     }
 

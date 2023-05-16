@@ -2,24 +2,22 @@ package com.dam.juanmaseatitapp.Model;
 
 public class User {
     // Atributos relacionados con los campos de la BD
-    private String Name;
-    private String Password;
-    private String Phone;
-    private String IsStaff;
+    private String Name, Password, Phone, IsStaff, secureCode;
 
     // Constructores
     public User() {}
 
-    public User(String name, String password, String phone) {
+    /*public User(String name, String password, String phone) {
         Name = name;
         Password = password;
         Phone = phone;
-    }
+    }*/
 
-    public User(String name, String password) {
+    public User(String name, String password, String secureCode) {
         Name = name;
         Password = password;
         IsStaff = "false";
+        this.secureCode = secureCode;
     }
 
     // Getters y Setters
@@ -34,4 +32,7 @@ public class User {
 
     public String getIsStaff() { return IsStaff; }
     public void setIsStaff(String isStaff) { IsStaff = isStaff; }
+
+    public String getSecureCode() { return secureCode; }
+    public void setSecureCode(String secureCode) { this.secureCode = secureCode; }
 }

@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/my_bg"
-    tools:context=".OrderStatus">
+    tools:context=".OrderStatusFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listOrders"
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

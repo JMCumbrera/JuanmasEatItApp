@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".CartFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_home"
-        android:scrollbars="vertical"
+        android:id="@+id/listCart"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

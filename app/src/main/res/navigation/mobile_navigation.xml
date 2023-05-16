@@ -7,19 +7,25 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.dam.juanmaseatitapp.ui.home.HomeFragment"
+        android:name="com.dam.juanmaseatitapp.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_cart"
+        android:name="com.dam.juanmaseatitapp.CartFragment"
+        android:label="@string/carro"
+        tools:layout="@layout/fragment_cart" />
+
+    <!--<fragment
         android:id="@+id/nav_gallery"
         android:name="com.dam.juanmaseatitapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" /> -->
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.dam.juanmaseatitapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_order_status"
+        android:name="com.dam.juanmaseatitapp.OrderStatusFragment"
+        android:label="@string/menu_order_status"
+        tools:layout="@layout/fragment_order_status" />
 </navigation>

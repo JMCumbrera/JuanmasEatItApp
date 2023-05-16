@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/white"
-            android:text="675752395"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:inputType="phone"
@@ -29,9 +28,7 @@
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="11"
             app:met_primaryColor="@android:color/white"
-            app:met_singleLineEllipsis="true"
-
-            />
+            app:met_singleLineEllipsis="true" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edtPassword"
@@ -39,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/white"
-            android:text="1234"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:inputType="textPassword"
@@ -47,9 +43,34 @@
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="11"
             app:met_primaryColor="@android:color/white"
-            app:met_singleLineEllipsis="true"
+            app:met_singleLineEllipsis="true" />
 
-            />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/ckbRemember"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                android:text="@string/recu_rdame"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                app:buttonTint="@android:color/white" />
+            
+            <TextView
+                android:id="@+id/txtForgotPwd"
+                android:text="@string/forgot_pwd"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -64,9 +85,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cornerRadius="4dp" />
-        <!--app:buttonColor="@color/btnSignActive"
-        app:shadowColor="@android:color/black"
-        app:shadowEnabled="true"
-        app:shadowHeight="5dp"-->
 
 </RelativeLayout>

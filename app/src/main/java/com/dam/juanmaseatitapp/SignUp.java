@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,7 +22,7 @@ import java.util.Objects;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtPhone, edtName, edtPassword;
+    MaterialEditText edtPhone, edtName, edtPassword, edtSecureCode;
     Button btnSignUp;
 
     @Override
@@ -32,6 +33,7 @@ public class SignUp extends AppCompatActivity {
         edtName = (MaterialEditText)findViewById(R.id.edtName);
         edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
         edtPhone = (MaterialEditText)findViewById(R.id.edtPhone);
+        edtSecureCode = (MaterialEditText)findViewById(R.id.edtSecureCode);
 
         btnSignUp = (Button)findViewById(R.id.btnSignUp);
 
@@ -39,9 +41,8 @@ public class SignUp extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("User");
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSignUp.setOnClickListener(view -> {
+            if (Common.isConnectedToInternet(getBaseContext())) {
                 final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
                 mDialog.setMessage("Por favor espere...");
                 mDialog.show();
@@ -56,7 +57,9 @@ public class SignUp extends AppCompatActivity {
                         } else {
                             mDialog.dismiss();
 
-                            User user = new User(Objects.requireNonNull(edtName.getText()).toString(), Objects.requireNonNull(edtPassword.getText()).toString());
+                            User user = new User(Objects.requireNonNull(edtName.getText()).toString(),
+                                                 Objects.requireNonNull(edtPassword.getText()).toString(),
+                                                 Objects.requireNonNull(edtSecureCode.getText()).toString());
                             table_user.child(edtPhone.getText().toString()).setValue(user);
 
                             Toast.makeText(SignUp.this, "Se ha registrado con éxito", Toast.LENGTH_SHORT).show();
@@ -65,10 +68,10 @@ public class SignUp extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
+            } else {
+                Toast.makeText(this, "Por favor, compruebe su conexión a internet", Toast.LENGTH_SHORT).show();
             }
         });
     }

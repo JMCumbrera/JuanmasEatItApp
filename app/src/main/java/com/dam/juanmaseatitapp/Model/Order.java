@@ -5,21 +5,18 @@ package com.dam.juanmaseatitapp.Model;
  */
 public class Order {
     // Atributos pertenecientes a la BD
-    private String ProductId;
-    private String ProductName;
-    private String Quantity;
-    private String Price;
-    private String Discount;
+    private String ProductId, ProductName, Quantity, Price, Discount, Image;
 
     // Constructores
     public Order() {}
 
-    public Order(String productId, String productName, String quantity, String price, String discount) {
+    public Order(String productId, String productName, String quantity, String price, String discount, String image) {
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
+        Image = image;
     }
 
     // Getters y Setters
@@ -37,4 +34,7 @@ public class Order {
 
     public String getDiscount() { return Discount; }
     public void setDiscount(String discount) { Discount = discount; }
+
+    public String getImage() { return Image; }
+    public void setImage(String image) { Image = image; }
 }
