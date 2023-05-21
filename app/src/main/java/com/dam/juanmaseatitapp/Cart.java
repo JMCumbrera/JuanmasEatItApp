@@ -1,6 +1,5 @@
 package com.dam.juanmaseatitapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -8,9 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.dam.juanmaseatitapp.Common.Common;
@@ -36,7 +33,7 @@ public class Cart extends AppCompatActivity {
     AppCompatButton btnPlace;
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
-    RelativeLayout rootLayout;
+    //RelativeLayout rootLayout;
 
     // Métodos
     @Override
@@ -100,23 +97,28 @@ public class Cart extends AppCompatActivity {
         alertDialog.setIcon(R.drawable.baseline_shopping_cart_24);
 
         alertDialog.setPositiveButton("SI", (dialog, which) -> {
-            // Creamos una nueva petición (clase Request encargada de los envíos)
-            Request request = new Request(
-                    Common.currentUser.getPhone(),
-                    Common.currentUser.getName(),
-                    edtAddress.getText().toString(),
-                    txtTotalPrice.getText().toString(),
-                    cart,
-                    edtComment.getText().toString()
-            );
+            if (edtAddress.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Por favor, rellene la dirección", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            } else {
+                // Creamos una nueva petición (clase Request encargada de los envíos)
+                Request request = new Request(
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
+                        edtAddress.getText().toString(),
+                        txtTotalPrice.getText().toString(),
+                        cart,
+                        edtComment.getText().toString()
+                );
 
-            // Lo submiteamos a la BD Firebase
-            requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                // Lo submiteamos a la BD Firebase
+                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
-            // Una vez subido el pedido a la BD, borramos el carro de compra
-            new Database(getBaseContext()).cleanCart();
-            Toast.makeText(Cart.this, "¡Gracias por su compra!", Toast.LENGTH_SHORT).show();
-            finish();
+                // Una vez subido el pedido a la BD, borramos el carro de compra
+                new Database(getBaseContext()).cleanCart();
+                Toast.makeText(Cart.this, "¡Gracias por su compra!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         });
 
         alertDialog.setNegativeButton("NO", (dialogInterface, which) -> dialogInterface.dismiss());

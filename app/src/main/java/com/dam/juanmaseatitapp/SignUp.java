@@ -21,7 +21,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.Objects;
 
 public class SignUp extends AppCompatActivity {
-
+    // Atributos de clase
     MaterialEditText edtPhone, edtName, edtPassword, edtSecureCode;
     Button btnSignUp;
 
@@ -47,29 +47,37 @@ public class SignUp extends AppCompatActivity {
                 mDialog.setMessage("Por favor espere...");
                 mDialog.show();
 
-                table_user.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Comprobamos si el nº de tel. está registrado
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists()) {
-                            mDialog.dismiss();
-                            Toast.makeText(SignUp.this, "Número de teléfono ya registrado", Toast.LENGTH_SHORT).show();
-                        } else {
-                            mDialog.dismiss();
+                if (edtName.getText().toString().isEmpty() ||
+                        edtPassword.getText().toString().isEmpty() ||
+                        edtPhone.getText().toString().isEmpty() ||
+                        edtSecureCode.getText().toString().isEmpty()) {
+                    mDialog.dismiss();
+                    Toast.makeText(this, "Por favor, rellene todos los campos", Toast.LENGTH_SHORT).show();
+                } else {
+                    table_user.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // Comprobamos si el nº de tel. está registrado
+                            if(dataSnapshot.child(edtPhone.getText().toString()).exists()) {
+                                mDialog.dismiss();
+                                Toast.makeText(SignUp.this, "Número de teléfono ya registrado", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mDialog.dismiss();
 
-                            User user = new User(Objects.requireNonNull(edtName.getText()).toString(),
-                                                 Objects.requireNonNull(edtPassword.getText()).toString(),
-                                                 Objects.requireNonNull(edtSecureCode.getText()).toString());
-                            table_user.child(edtPhone.getText().toString()).setValue(user);
+                                User user = new User(Objects.requireNonNull(edtName.getText()).toString(),
+                                        Objects.requireNonNull(edtPassword.getText()).toString(),
+                                        Objects.requireNonNull(edtSecureCode.getText()).toString());
+                                table_user.child(edtPhone.getText().toString()).setValue(user);
 
-                            Toast.makeText(SignUp.this, "Se ha registrado con éxito", Toast.LENGTH_SHORT).show();
-                            finish();
+                                Toast.makeText(SignUp.this, "Se ha registrado con éxito", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
             } else {
                 Toast.makeText(this, "Por favor, compruebe su conexión a internet", Toast.LENGTH_SHORT).show();
             }

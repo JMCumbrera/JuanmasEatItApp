@@ -73,40 +73,47 @@ public class SignIn extends AppCompatActivity {
                 mDialog.setMessage("Por favor espere...");
                 mDialog.show();
 
-                table_user.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Comprueba si el usuario no existe en la BD
-                        if (dataSnapshot.child(edtPhone.getText().toString()).exists()) {
-                            // Conseguimos la info. del usuario
-                            mDialog.dismiss();
-                            User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
+                if (edtPassword.getText().toString().isEmpty() ||
+                        edtPhone.getText().toString().isEmpty()) {
+                    mDialog.dismiss();
+                    Toast.makeText(this, "Por favor, rellene todos los campos", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si ninguno de los campos está en blanco, seguimos
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // Comprueba si el usuario no existe en la BD
+                            if (dataSnapshot.child(edtPhone.getText().toString()).exists()) {
+                                // Conseguimos la info. del usuario
+                                mDialog.dismiss();
+                                User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
 
-                            // Usamos el set del atributo Phone (teléfono), para establecerlo
-                            user.setPhone(edtPhone.getText().toString());
+                                // Usamos el set del atributo Phone (teléfono), para establecerlo
+                                user.setPhone(edtPhone.getText().toString());
 
-                            // Si encontramos la clase accedemos al usuario
-                            if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                {
-                                    Intent homeIntent = new Intent(SignIn.this, Home.class);
-                                    Common.currentUser = user;
-                                    startActivity(homeIntent);
-                                    finish();
+                                // Si encontramos la clase accedemos al usuario
+                                if (user.getPassword().equals(edtPassword.getText().toString())) {
+                                    {
+                                        Intent homeIntent = new Intent(SignIn.this, Home.class);
+                                        Common.currentUser = user;
+                                        startActivity(homeIntent);
+                                        finish();
 
-                                    table_user.removeEventListener(this);
+                                        table_user.removeEventListener(this);
+                                    }
+                                } else {
+                                    Toast.makeText(SignIn.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(SignIn.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                                mDialog.dismiss();
+                                Toast.makeText(SignIn.this, "El usuario no existe en la BD", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            mDialog.dismiss();
-                            Toast.makeText(SignIn.this, "El usuario no existe en la BD", Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
             } else {
                 Toast.makeText(this, "Por favor, compruebe su conexión a Internet", Toast.LENGTH_SHORT).show();
             }
@@ -134,10 +141,14 @@ public class SignIn extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.child(Objects.requireNonNull(edtPhone.getText()).toString()).getValue(User.class);
 
-                    if (user.getSecureCode().equals(edtSecureCode.getText().toString()))
-                        Toast.makeText(SignIn.this, "Su contraseña es: " + user.getPassword(), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(SignIn.this, "Código de seguridad incorrecto", Toast.LENGTH_SHORT).show();
+                    if (edtPhone.getText().toString().isEmpty() || edtSecureCode.getText().toString().isEmpty()) {
+                        Toast.makeText(SignIn.this, "Por favor, rellene todos los campos", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (user.getSecureCode().equals(edtSecureCode.getText().toString()))
+                            Toast.makeText(SignIn.this, "Su contraseña es: " + user.getPassword(), Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(SignIn.this, "Código de seguridad incorrecto", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override

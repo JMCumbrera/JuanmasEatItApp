@@ -81,6 +81,8 @@ dependencies {
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2' // Barra de búsqueda
     implementation 'io.github.ShawnLin013:number-picker:2.4.13' // Rueda de selección de cantidad de plato
     implementation 'com.github.d-max:spots-dialog:0.7@aar'  // Cambio de contraseña
-
+    // Banner Slider
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
 }

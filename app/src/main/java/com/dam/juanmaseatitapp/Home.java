@@ -19,14 +19,23 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.dam.juanmaseatitapp.Common.Common;
+import com.dam.juanmaseatitapp.Model.Banner;
 import com.dam.juanmaseatitapp.databinding.ActivityHomeBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.HashMap;
@@ -41,6 +50,11 @@ public class Home extends AppCompatActivity {
     private ActivityHomeBinding homeBinding;
     TextView txtFullName;
     private DrawerLayout drawerLayout;
+    private FirebaseDatabase database;
+    //private DatabaseReference category;
+    // Slider
+    HashMap<String, String> image_list;
+    SliderLayout mSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +66,10 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = homeBinding.appBarHome.toolbar;
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+
+        // Inicializamos la BD
+        database = FirebaseDatabase.getInstance();
+        //category = database.getReference("Category");
 
         // Paper
         Paper.init(this);
@@ -84,6 +102,73 @@ public class Home extends AppCompatActivity {
         View headerView = navView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
+
+        // Configuración del Slider
+        // Necesitamos llamar a esta función después de inicializar la BD Firebase
+        setupSlider();
+    }
+
+    private void setupSlider() {
+        mSlider = (SliderLayout)findViewById(R.id.slider);
+        image_list = new HashMap<>();
+
+        DatabaseReference banners = database.getReference("Banner");
+
+        banners.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapShot : snapshot.getChildren()) {
+                    Banner banner = postSnapShot.getValue(Banner.class);
+
+                    // Concatenaremos la ID y el nombre: PIZZA@01
+                    // De este modo, usaremos PIZZA para mostrar la descripción y 01 para el foodId
+                    image_list.put(banner.getName() + "@" + banner.getId(), banner.getImage());
+                }
+
+                for (String key : image_list.keySet()) {
+                    String[] keySplit = key.split("@");
+                    String nameOfFood = keySplit[0];
+                    String idOfFood = keySplit[1];
+
+                    // Creamos el Slider
+                    TextSliderView textSliderView = new TextSliderView(getBaseContext());
+                    textSliderView
+                            .description(nameOfFood)
+                            .image(image_list.get(key))
+                            .setScaleType(BaseSliderView.ScaleType.Fit)
+                            .setOnSliderClickListener(slider -> {
+                                Intent intent = new Intent(Home.this, FoodDetail.class);
+
+                                // Enviaremos el foodId a FoodDetail
+                                intent.putExtras(textSliderView.getBundle());
+                                startActivity(intent);
+                            });
+
+                    // Añadimos bundle adicional
+                    textSliderView.bundle(new Bundle());
+                    textSliderView.getBundle().putString("FoodId", idOfFood);
+
+                    mSlider.addSlider(textSliderView);
+
+                    // Eliminamos el evento después de terminar
+                    banners.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mSlider.setCustomAnimation(new DescriptionAnimation());
+        mSlider.setDuration(4000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSlider.stopAutoCycle();
     }
 
     @Override
@@ -157,28 +242,35 @@ public class Home extends AppCompatActivity {
             android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
             waitingDialog.show();
 
-            // Comprobamos la contraseña anterior
-            if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())) {
-                // Comprobamos la contraseña nueva y la repetimos
-                if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())) {
-                    Map<String, Object> passwordUpdate = new HashMap<>();
-                    passwordUpdate.put("Password", edtNewPassword.getText().toString());
+            if (edtPassword.getText().toString().isEmpty() ||
+                    edtNewPassword.getText().toString().isEmpty() ||
+                    edtRepeatPassword.getText().toString().isEmpty()) {
+                waitingDialog.dismiss();
+                Toast.makeText(this, "Por favor, rellene todos los campos", Toast.LENGTH_SHORT).show();
+            } else {
+                // Comprobamos la contraseña anterior
+                if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())) {
+                    // Comprobamos la contraseña nueva y la repetimos
+                    if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())) {
+                        Map<String, Object> passwordUpdate = new HashMap<>();
+                        passwordUpdate.put("Password", edtNewPassword.getText().toString());
 
-                    // Llevamos la actualización
-                    DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
-                    user.child(Common.currentUser.getPhone())
-                            .updateChildren(passwordUpdate)
-                            .addOnCompleteListener(task -> {
-                                waitingDialog.dismiss();
-                                Toast.makeText(Home.this, "La contraseña fue actualizada", Toast.LENGTH_SHORT).show();
-                            }).addOnFailureListener(e -> Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        // Llevamos la actualización
+                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
+                        user.child(Common.currentUser.getPhone())
+                                .updateChildren(passwordUpdate)
+                                .addOnCompleteListener(task -> {
+                                    waitingDialog.dismiss();
+                                    Toast.makeText(Home.this, "La contraseña fue actualizada", Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(e -> Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                    } else {
+                        waitingDialog.dismiss();
+                        Toast.makeText(Home.this, "Las contraseñas introducidas no coinciden", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     waitingDialog.dismiss();
-                    Toast.makeText(Home.this, "Las contraseñas introducidas no coinciden", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                waitingDialog.dismiss();
-                Toast.makeText(Home.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
             }
         });
 
