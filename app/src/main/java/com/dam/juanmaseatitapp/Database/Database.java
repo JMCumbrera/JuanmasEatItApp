@@ -73,6 +73,12 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
+    //public void removeFromCart(String productId, String phone) {
+    //    SQLiteDatabase db = getReadableDatabase();
+    //    String query = String.format("DELETE * FROM OrderDetail WHERE UserPhone = '%s' AND ProductId = '%s'", phone, productId);
+    //    db.execSQL(query);
+    //}
+
     /**
      * Método con la utilidad de añadir platos de comida favoritos, simplemente haciendo clic en
      * el logo correspondiente, el cual se encuentra debajo y a la derecha de cada plato.

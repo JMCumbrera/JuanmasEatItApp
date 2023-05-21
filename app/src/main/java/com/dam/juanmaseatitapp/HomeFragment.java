@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -12,11 +11,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dam.juanmaseatitapp.Common.Common;
-import com.dam.juanmaseatitapp.Interface.ItemClickListener;
 import com.dam.juanmaseatitapp.Model.Category;
 import com.dam.juanmaseatitapp.ViewHolder.MenuViewHolder;
 import com.dam.juanmaseatitapp.databinding.FragmentHomeBinding;
@@ -24,8 +21,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-
-import io.paperdb.Paper;
 
 public class HomeFragment extends Fragment {
     // Attributos de clase
@@ -72,24 +67,17 @@ public class HomeFragment extends Fragment {
 
                 Category clickItem = model;
 
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        // Get CategoryId and send to new Activity
-                        Intent foodList = new Intent(context, FoodList.class);
+                viewHolder.setItemClickListener((view, position1, isLongClick) -> {
+                    // Get CategoryId and send to new Activity
+                    Intent foodList = new Intent(context, FoodList.class);
 
-                        // Because CategoryId is key, so we just get the key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-                    }
+                    // Because CategoryId is key, so we just get the key of this item
+                    foodList.putExtra("CategoryId", adapter.getRef(position1).getKey());
+                    startActivity(foodList);
                 });
             }
         };
         recycler_menu.setAdapter(adapter);
-    }
-
-    public void getLoadMenu() {
-        loadMenu(homeFragmentRoot.getContext());
     }
 
     @Override

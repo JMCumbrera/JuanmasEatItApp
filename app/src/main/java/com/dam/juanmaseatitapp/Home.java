@@ -103,37 +103,34 @@ public class Home extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         //homeBinding.navView.bringToFront();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
-        homeBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case (R.id.nav_menu):
-                        navController.navigate(R.id.nav_home);
-                        Toast.makeText(Home.this, "Menu", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case (R.id.nav_cart):
-                        //navController.navigate(R.id.nav_cart);
-                        Intent intentCart = new Intent(Home.this, Cart.class);
-                        startActivity(intentCart);
-                        return true;
-                    case (R.id.nav_orders):
-                        navController.navigate(R.id.nav_order_status);
-                        Toast.makeText(Home.this, "Order status", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case (R.id.nav_log_out):
-                        // Borramos el usuario y la clave guardadas por la función de recordar usuario
-                        Paper.book().destroy();
+        homeBinding.navView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case (R.id.nav_menu):
+                    navController.navigate(R.id.nav_home);
+                    Toast.makeText(Home.this, "Menu", Toast.LENGTH_SHORT).show();
+                    return true;
+                case (R.id.nav_cart):
+                    //navController.navigate(R.id.nav_cart);
+                    Intent intentCart = new Intent(Home.this, Cart.class);
+                    startActivity(intentCart);
+                    return true;
+                case (R.id.nav_orders):
+                    navController.navigate(R.id.nav_order_status);
+                    Toast.makeText(Home.this, "Order status", Toast.LENGTH_SHORT).show();
+                    return true;
+                case (R.id.nav_log_out):
+                    // Borramos el usuario y la clave guardadas por la función de recordar usuario
+                    Paper.book().destroy();
 
-                        Intent intentLogout = new Intent(Home.this, MainActivity.class);
-                        startActivity(intentLogout);
-                        finish();
-                        return true;
-                    case (R.id.nav_change_pwd):
-                        showChangePasswordDialog();
-                        return true;
-                    default: return false;
-                }
-            };
+                    Intent intentLogout = new Intent(Home.this, MainActivity.class);
+                    startActivity(intentLogout);
+                    finish();
+                    return true;
+                case (R.id.nav_change_pwd):
+                    showChangePasswordDialog();
+                    return true;
+                default: return false;
+            }
         });
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();

@@ -2,7 +2,6 @@ package com.dam.juanmaseatitapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,17 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Database.Database;
-import com.dam.juanmaseatitapp.Interface.ItemClickListener;
 import com.dam.juanmaseatitapp.Model.Food;
 import com.dam.juanmaseatitapp.ViewHolder.FoodViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.search.SearchBar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -171,7 +166,8 @@ public class FoodList extends AppCompatActivity {
      * @param categoryId ID de la categoría a la que pertenece el susodicho plato
      */
     private void loadListFood(String categoryId) {
-        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(
+                Food.class,
                 R.layout.food_item,
                 FoodViewHolder.class,
                 foodList.orderByChild("menuId").equalTo(categoryId)) { // Equivale a: SELECT * FROM Foods WHERE menuId =
@@ -179,7 +175,8 @@ public class FoodList extends AppCompatActivity {
             protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
                 foodViewHolder.food_name.setText(food.getName());
                 foodViewHolder.food_price.setText(String.format("%s €", food.getPrice().toString()));
-                Picasso.with(getBaseContext()).load(food.getImage())
+                Picasso.with(getBaseContext())
+                        .load(food.getImage())
                         .into(foodViewHolder.food_image);
 
                 // Favorites

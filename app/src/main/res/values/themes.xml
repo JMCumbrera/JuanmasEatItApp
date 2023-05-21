@@ -34,7 +34,7 @@
     </style>
 
     <style name="ExpandedAppBar" parent="TextAppearance.Material3.ActionBar.Title">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">normal</item>
     </style>
 </resources>

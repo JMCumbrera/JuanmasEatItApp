@@ -37,4 +37,12 @@ public class Order {
 
     public String getImage() { return Image; }
     public void setImage(String image) { Image = image; }
+
+    // Methods
+    public String getProductNameFromId(String productId) {
+        if (productId.equals(this.ProductId))
+            return this.ProductName;
+        else
+            return "Not Found!";
+    }
 }

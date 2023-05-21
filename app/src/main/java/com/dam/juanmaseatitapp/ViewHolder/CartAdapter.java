@@ -1,56 +1,19 @@
 package com.dam.juanmaseatitapp.ViewHolder;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.dam.juanmaseatitapp.Common.Common;
-import com.dam.juanmaseatitapp.Interface.ItemClickListener;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import com.dam.juanmaseatitapp.Model.Order;
 import com.dam.juanmaseatitapp.R;
 import com.squareup.picasso.Picasso;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
-    // Atributos de clase
-    public TextView txt_cart_name, txt_price, cart_count;
-    public ImageView cart_image;
-
-    // Imposibilidad de usar TextDrawable
-    public ImageView img_cart_count;
-    private ItemClickListener itemClickListener;
-
-    // Constructor
-    public CartViewHolder(@NonNull View itemView) {
-        super(itemView);
-        txt_cart_name = (TextView)itemView.findViewById(R.id.cart_item_name);
-        txt_price = (TextView)itemView.findViewById(R.id.cart_item_Price);
-        cart_count = (TextView)itemView.findViewById(R.id.cart_item_count);
-        cart_image = (ImageView)itemView.findViewById(R.id.cart_image);
-    }
-
-    // Setter
-    public void setTxt_cart_name(TextView txt_cart_name) { this.txt_cart_name = txt_cart_name; }
-
-    @Override
-    public void onClick(View view) {}
-
-    @Override
-    public void onCreateContextMenu(ContextMenu contextMenu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        contextMenu.setHeaderTitle("Seleccione una acción");
-        contextMenu.add(0, 0, getAdapterPosition(), Common.DELETE);
-    }
-}
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     // Atributos de clase
     private List<Order> listData = new ArrayList<>();
@@ -88,8 +51,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.cart_count.setText(listData.get(position).getQuantity());
     }
 
+    /**
+     * Con este método obtendremos el número de elementos que contiene la lista listData
+     * @return Número de elementos de la lista listData
+     */
     @Override
     public int getItemCount() {
         return listData.size();
     }
+
+    /**
+     * Con este método podremos obtener un elemento de la lista del carro de compra pasando como
+     * parámetro el índice del mismo en la lista
+     * @param index Indice del objeto que queremos obtener
+     * @return Objeto de tipo Order que obtendremos
+     */
+    //public Order getItem(int index) { return listData.get(index); }
+
+    //public void removeItem(int position) {
+    //    listData.remove(position);
+    //    notifyItemRemoved(position);
+    //}
+
+    //public void restoreItem(Order item, int position) {
+    //    listData.add(position, item);
+    //    notifyItemInserted(position);
+    //}
 }
