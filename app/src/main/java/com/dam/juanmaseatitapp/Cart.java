@@ -178,9 +178,9 @@ public class Cart extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Calculamos el precio total
-        int total = 0;
+        double total = 0;
         for (Order order : cart)
-            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+            total += (Double.parseDouble(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
 
         Locale locale = new Locale("es", "ES");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
