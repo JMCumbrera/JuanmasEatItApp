@@ -19,6 +19,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -78,12 +79,9 @@ public class Home extends AppCompatActivity {
         NavigationView navView = homeBinding.navView;
         navView.bringToFront();
 
-        homeBinding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent cartIntent = new Intent(Home.this, Cart.class);
-                startActivity(cartIntent);
-            }
+        homeBinding.appBarHome.fab.setOnClickListener(view -> {
+            Intent cartIntent = new Intent(Home.this, Cart.class);
+            startActivity(cartIntent);
         });
 
         // Passing each menu ID as a set of Ids because each
@@ -108,6 +106,9 @@ public class Home extends AppCompatActivity {
         setupSlider();
     }
 
+    /**
+     * Método que controla el Banner Slider del Home de la aplicación.
+     */
     private void setupSlider() {
         mSlider = (SliderLayout)findViewById(R.id.slider);
         image_list = new HashMap<>();

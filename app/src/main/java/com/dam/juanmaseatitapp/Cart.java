@@ -1,12 +1,15 @@
 package com.dam.juanmaseatitapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +36,6 @@ public class Cart extends AppCompatActivity {
     AppCompatButton btnPlace;
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
-    //RelativeLayout rootLayout;
 
     // Métodos
     @Override
@@ -54,6 +56,15 @@ public class Cart extends AppCompatActivity {
         // Deslizar para eliminar item
         //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+        /*recyclerView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+                getMenuInflater().inflate(R.m);
+            }
+        });*/
+
+        recyclerView.setOnClickListener(this::registerForContextMenu);
 
         txtTotalPrice = (TextView)findViewById(R.id.total);
         btnPlace = (AppCompatButton)findViewById(R.id.btnPlaceOrder);
@@ -126,26 +137,17 @@ public class Cart extends AppCompatActivity {
         alertDialog.show();
     }
 
-    /*@Override
+    @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getTitle().equals(Common.DELETE)) {
+        String itemTitle = item.getTitle().toString();
+
+        if (itemTitle.equals(Common.DELETE)) {
             deleteCart(item.getOrder());
             return true;
         }
 
-        return false;
-    }*/
-
-    /*@Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getTitle().equals(Common.DELETE)) {
-            deleteCart(item.getOrder());
-            return true;
-        }
-
-        return false;
-    }*/
-
+        return super.onContextItemSelected(item);
+    }
 
 
     /**
@@ -187,48 +189,4 @@ public class Cart extends AppCompatActivity {
 
         txtTotalPrice.setText(fmt.format(total));
     }
-
-    /*@Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof CartViewHolder) {
-            int index = viewHolder.getAdapterPosition();
-            CartAdapter cartAdapter = (CartAdapter)recyclerView.getAdapter();
-
-            String name = String.valueOf(cartAdapter.getItem(index));
-
-            Order deleteItem = cartAdapter.getItem(index);
-
-            adapter.removeItem(index);
-            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
-
-            // Calculamos el precio
-            int total = 0;
-            List<Order> orders = new Database(getBaseContext()).getCarts();
-            for (Order item : orders)
-                total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
-            Locale locale = new Locale("es", "ES");
-            NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
-            txtTotalPrice.setText(fmt.format(total));
-
-            // Snackbar
-            Snackbar snackbar = Snackbar.make(rootLayout, "¡" + name + " eliminado del carro!", Snackbar.LENGTH_LONG);
-            snackbar.setAction("DESHACER", view -> {
-                adapter.restoreItem(deleteItem, index);
-                new Database(getBaseContext()).addToCart(deleteItem);
-
-                // Calculamos el precio
-                int total = 0;
-                List<Order> orders = new Database(getBaseContext()).getCarts();
-                for (Order item : orders)
-                    total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
-                Locale locale = new Locale("es", "ES");
-                NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
-                txtTotalPrice.setText(fmt.format(total));*//*
-            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-        }
-    }*/
 }

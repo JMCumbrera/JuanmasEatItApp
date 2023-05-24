@@ -181,21 +181,21 @@ public class FoodList extends AppCompatActivity {
 
                 // Favorites
                 // Añadimos los platos favoritos
-                //if (localDB.isFavorite(adapter.getRef(i).getKey()))
-                //    foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_24);
+                if (localDB.isFavorite(adapter.getRef(i).getKey()))
+                    foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_24);
 
                 // Al hacer click cambiaremos su estado
-                //foodViewHolder.fav_image.setOnClickListener(view_favorite -> {
-                //    if (!localDB.isFavorite(adapter.getRef(i).getKey())) {
-                //        localDB.addFavorites(adapter.getRef(i).getKey());
-                //        foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_24);
-                //        Toast.makeText(FoodList.this, ""+food.getName()+" fue añadido a Favoritos", Toast.LENGTH_SHORT).show();
-                //    } else {
-                //        localDB.removeFromFavorites(adapter.getRef(i).getKey());
-                //        foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_24);
-                //        Toast.makeText(FoodList.this, ""+food.getName()+" fue eliminado de Favoritos", Toast.LENGTH_SHORT).show();
-                //    }
-                //});
+                foodViewHolder.fav_image.setOnClickListener(view_favorite -> {
+                    if (!localDB.isFavorite(adapter.getRef(i).getKey())) {
+                        localDB.addFavorites(adapter.getRef(i).getKey());
+                        foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_24);
+                        Toast.makeText(FoodList.this, ""+food.getName()+" fue añadido a Favoritos", Toast.LENGTH_SHORT).show();
+                    } else {
+                        localDB.removeFromFavorites(adapter.getRef(i).getKey());
+                        foodViewHolder.fav_image.setImageResource(R.drawable.baseline_favorite_border_24);
+                        Toast.makeText(FoodList.this, ""+food.getName()+" fue eliminado de Favoritos", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 final Food local = food;
                 foodViewHolder.setItemClickListener((view, position, isLongClick) -> {

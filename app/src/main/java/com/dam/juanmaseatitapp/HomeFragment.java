@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Model.Category;
@@ -31,11 +32,36 @@ public class HomeFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
     View homeFragmentRoot;
+    //SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         homeFragmentRoot = root;
+
+        /*// View
+        swipeRefreshLayout = (SwipeRefreshLayout)homeFragmentRoot.findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(android.R.color.holo_green_dark),
+                getResources().getColor(android.R.color.holo_orange_dark),
+                getResources().getColor(android.R.color.holo_blue_dark));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
+
+        // Iniciamos el SwipeRefreshLayout por primera vez
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (Common.isConnectedToInternet(root.getContext()))
+                    loadMenu(root.getContext());
+                else
+                    Toast.makeText(root.getContext(), "Por favor, compruebe su conexión a Internet", Toast.LENGTH_SHORT).show();
+            }
+        });*/
 
         // Inicializamos la BD
         database = FirebaseDatabase.getInstance();
@@ -44,8 +70,6 @@ public class HomeFragment extends Fragment {
         // Cargamos el menú
         recycler_menu = binding.recyclerHome;
         recycler_menu.setHasFixedSize(true);
-        //layoutManager = new LinearLayoutManager(root.getContext());
-        //recycler_menu.setLayoutManager(layoutManager);
         recycler_menu.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         if (Common.isConnectedToInternet(root.getContext()))
