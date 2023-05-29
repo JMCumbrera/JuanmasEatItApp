@@ -174,7 +174,7 @@ public class Home extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflamos el menu; esto añade los items al actionBar si están presentes
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
         return true;
@@ -183,26 +183,22 @@ public class Home extends AppCompatActivity {
     /**
      * Método que permite al ActionMenu del menú Home funcionar. Este método escuchará los clicks
      * realizados en elementos del ActionMenu tales como el LogOut o el cambio de contraseña.
-     * @return
+     * @return boolean
      */
     @Override
     public boolean onSupportNavigateUp() {
-        //homeBinding.navView.bringToFront();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
         homeBinding.navView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case (R.id.nav_menu):
                     navController.navigate(R.id.nav_home);
-                    Toast.makeText(Home.this, "Menu", Toast.LENGTH_SHORT).show();
                     return true;
                 case (R.id.nav_cart):
-                    //navController.navigate(R.id.nav_cart);
                     Intent intentCart = new Intent(Home.this, Cart.class);
                     startActivity(intentCart);
                     return true;
                 case (R.id.nav_orders):
                     navController.navigate(R.id.nav_order_status);
-                    Toast.makeText(Home.this, "Order status", Toast.LENGTH_SHORT).show();
                     return true;
                 case (R.id.nav_log_out):
                     // Borramos el usuario y la clave guardadas por la función de recordar usuario

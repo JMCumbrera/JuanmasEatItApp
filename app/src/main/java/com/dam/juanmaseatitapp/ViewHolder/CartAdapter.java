@@ -18,6 +18,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     // Atributos de clase
     private List<Order> listData = new ArrayList<>();
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     // Constructor
     public CartAdapter(List<Order> listData, Context context) {
@@ -49,6 +50,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
         // Sustituto del TextDrawable
         holder.cart_count.setText(listData.get(position).getQuantity());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
     }
 
     /**
@@ -60,21 +67,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         return listData.size();
     }
 
-    /**
-     * Con este método podremos obtener un elemento de la lista del carro de compra pasando como
-     * parámetro el índice del mismo en la lista
-     * @param index Indice del objeto que queremos obtener
-     * @return Objeto de tipo Order que obtendremos
-     */
-    //public Order getItem(int index) { return listData.get(index); }
-
-    //public void removeItem(int position) {
-    //    listData.remove(position);
-    //    notifyItemRemoved(position);
-    //}
-
-    //public void restoreItem(Order item, int position) {
-    //    listData.add(position, item);
-    //    notifyItemInserted(position);
-    //}
+    // Interfaz y Setter para click events
+    public interface OnItemClickListener { void onItemClick(int position); }
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 }

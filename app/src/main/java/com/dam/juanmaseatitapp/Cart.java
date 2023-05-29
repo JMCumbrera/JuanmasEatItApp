@@ -1,16 +1,14 @@
 package com.dam.juanmaseatitapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.dam.juanmaseatitapp.Common.Common;
@@ -47,22 +45,11 @@ public class Cart extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
 
-        // Init
+        // Inicializamos
         recyclerView = (RecyclerView)findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-        // Deslizar para eliminar item
-        //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-
-        /*recyclerView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-            @Override
-            public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-                getMenuInflater().inflate(R.m);
-            }
-        });*/
 
         recyclerView.setOnClickListener(this::registerForContextMenu);
 
@@ -80,23 +67,45 @@ public class Cart extends AppCompatActivity {
     }
 
     /**
+     * Clase que nos permitirá crear una ventana de diálogo que aparecerá cuando hagamos click
+     * sobre un elemento del carro de compra, con la opción de eliminar dicho elemento.
+     * @param position Posición del elemento en el carro
+     */
+    private void showDeleteItemDialog(int position) {
+        // Creamos el AlertDialog usando el constructor de Builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Cart.this);
+
+        // Inflamos el layout de la vista de los elementos eliminables
+        LayoutInflater inflater = this.getLayoutInflater();
+        View deleteItemView = inflater.inflate(R.layout.delete_item_dialog, null);
+        alertDialogBuilder.setView(deleteItemView);
+
+        // Creamos un array final con un elemento para almacenar la instancia del AlertDialog
+        final AlertDialog[] alertDialogArray = new AlertDialog[1];
+
+        Button deleteItemButton = deleteItemView.findViewById(R.id.delete_item_button);
+        deleteItemButton.setOnClickListener(view -> {
+            // Eliminamos el elemento del carrito
+            deleteCart(position);
+
+            // Cerramos el diálogo
+            if (alertDialogArray[0] != null) {
+                alertDialogArray[0].dismiss();
+            }
+        });
+
+        // Inicializamos el AlertDialog después de configurar la vista
+        alertDialogArray[0] = alertDialogBuilder.create();
+        alertDialogArray[0].show();
+    }
+
+    /**
      * Ventana que aparecerá para que completes tu pedido y éste pueda llegar al restaurante
      */
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("¡Solo un paso más!");
         alertDialog.setMessage("Introduzca su dirección: ");
-
-        /*final EditText edtAddress = new EditText(Cart.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-
-        edtAddress.setLayoutParams(lp);
-
-        // Añadimos un campo EditText al alertDialog
-        alertDialog.setView(edtAddress);*/
 
         LayoutInflater inflater = this.getLayoutInflater();
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
@@ -137,19 +146,6 @@ public class Cart extends AppCompatActivity {
         alertDialog.show();
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        String itemTitle = item.getTitle().toString();
-
-        if (itemTitle.equals(Common.DELETE)) {
-            deleteCart(item.getOrder());
-            return true;
-        }
-
-        return super.onContextItemSelected(item);
-    }
-
-
     /**
      * Método que nos permitirá borrar un elemento de nuestro carro de compra
      * @param order Elemento de nuestro carro que borraremos
@@ -176,6 +172,11 @@ public class Cart extends AppCompatActivity {
     private void loadListFood() {
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart, this);
+
+        adapter.setOnItemClickListener(position -> {
+            showDeleteItemDialog(position);
+        });
+
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 

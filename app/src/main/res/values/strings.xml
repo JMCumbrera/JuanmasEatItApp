@@ -24,4 +24,6 @@
     <string name="recu_rdame">Recuérdame</string>
     <string name="forgot_pwd"><u>¿Olvidó su contraseña?</u></string>
     <string name="cambiar_contrase_a">Cambiar contraseña</string>
+    <string name="borrar">Borrar</string>
+    <string name="desea_eliminar_este_elemento_del_carro_de_compra">¿Desea eliminar este elemento del carro de compra?</string>
 </resources>
