@@ -183,7 +183,14 @@ public class Cart extends AppCompatActivity {
         // Calculamos el precio total
         double total = 0;
         for (Order order : cart)
-            total += (Double.parseDouble(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+            // Si el precio es mayor que 0 Y el descuento es menor que el propio precio continuamos
+            if (total > 0 || Double.parseDouble(order.getDiscount()) < Double.parseDouble(order.getPrice())) {
+                total += (((Double.parseDouble(order.getPrice())) * (Integer.parseInt(order.getQuantity()))) - (Double.parseDouble(order.getDiscount())));
+            // Y por contra, si el precio es menor o igual que 0 O el descuento es mayor o igual al propio precio,
+            // no tendremos el descuento en cuenta
+            } else if (total <= 0 && Double.parseDouble(order.getDiscount()) >= Double.parseDouble(order.getPrice())) {
+                total += ((Double.parseDouble(order.getPrice()) * (Integer.parseInt(order.getQuantity()))));
+            }
 
         Locale locale = new Locale("es", "ES");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
