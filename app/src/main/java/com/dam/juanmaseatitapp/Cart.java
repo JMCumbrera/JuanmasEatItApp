@@ -173,28 +173,33 @@ public class Cart extends AppCompatActivity {
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart, this);
 
-        adapter.setOnItemClickListener(position -> {
-            showDeleteItemDialog(position);
-        });
+        adapter.setOnItemClickListener(this::showDeleteItemDialog);
 
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         // Calculamos el precio total
         double total = 0;
-        for (Order order : cart)
-            // Si el precio es mayor que 0 Y el descuento es menor que el propio precio continuamos
-            if (total > 0 || Double.parseDouble(order.getDiscount()) < Double.parseDouble(order.getPrice())) {
-                total += (((Double.parseDouble(order.getPrice())) * (Integer.parseInt(order.getQuantity()))) - (Double.parseDouble(order.getDiscount())));
-            // Y por contra, si el precio es menor o igual que 0 O el descuento es mayor o igual al propio precio,
-            // no tendremos el descuento en cuenta
-            } else if (total <= 0 && Double.parseDouble(order.getDiscount()) >= Double.parseDouble(order.getPrice())) {
-                total += ((Double.parseDouble(order.getPrice()) * (Integer.parseInt(order.getQuantity()))));
+        for (Order order : cart) {
+            String price = order.getPrice() == null ? "0" : order.getPrice();
+            String quantity = order.getQuantity() == null ? "0" : order.getQuantity();
+            String discount = order.getDiscount() == null ? "0" : order.getDiscount();
+
+            if (!price.isEmpty() && !price.equals("null") && !quantity.isEmpty() && !quantity.equals("null") && !discount.isEmpty() && !discount.equals("null")) {
+                double accumulatedPrice = Double.parseDouble(price) * Integer.parseInt(quantity);
+
+                if (Double.parseDouble(price) > 0 || Double.parseDouble(discount) < Double.parseDouble(price)) {
+                    total += (accumulatedPrice - Double.parseDouble(discount));
+                } else if (Double.parseDouble(price) <= 0 && Double.parseDouble(discount) >= Double.parseDouble(price)) {
+                    total += accumulatedPrice;
+                }
             }
+        }
 
         Locale locale = new Locale("es", "ES");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
         txtTotalPrice.setText(fmt.format(total));
     }
+
 }
