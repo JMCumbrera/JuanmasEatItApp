@@ -36,8 +36,11 @@ import java.util.Map;
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
+/**
+ * Clase que administra la pantalla Home de la aplicación
+ */
 public class Home extends AppCompatActivity {
-    // Attributos de clase
+    // Atributos de clase
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding homeBinding;
     TextView txtFullName;
@@ -75,8 +78,8 @@ public class Home extends AppCompatActivity {
             startActivity(cartIntent);
         });
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // Pasar cada ID de menú como un conjunto de ID porque cada menú debe
+        // considerarse como destinos de nivel superior
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, /*R.id.nav_gallery,*/ R.id.nav_order_status)
                 .setOpenableLayout(drawerLayout)

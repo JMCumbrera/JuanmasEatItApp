@@ -1,14 +1,11 @@
 package com.dam.juanmaseatitapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -17,9 +14,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
-
 import java.util.Objects;
 
+/**
+ * Clase encargada de los registros de usuarios en la aplicación
+ */
 public class SignUp extends AppCompatActivity {
     // Atributos de clase
     MaterialEditText edtPhone, edtName, edtPassword, edtSecureCode;

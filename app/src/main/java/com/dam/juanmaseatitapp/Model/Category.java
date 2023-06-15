@@ -1,5 +1,9 @@
 package com.dam.juanmaseatitapp.Model;
 
+/**
+ * Clase encargada de representar las categorías en las que los diversos platos del restaurante
+ * pueden entrar
+ */
 public class Category {
     // Atributos relacionados con los campos de la BD
     private String Name;

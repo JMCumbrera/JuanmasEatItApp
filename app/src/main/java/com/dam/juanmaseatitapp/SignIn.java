@@ -24,6 +24,9 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.Objects;
 import io.paperdb.Paper;
 
+/**
+ * Clase necesaria para iniciar sesión en la aplicación
+ */
 public class SignIn extends AppCompatActivity {
     // Atributos
     EditText edtPhone, edtPassword;
@@ -113,6 +116,10 @@ public class SignIn extends AppCompatActivity {
         });
     }
 
+    /**
+     * Método que muestra un cuadro de diálogo que nos permite recuperar nuestra contraseña,
+     * haciendo uso de nuestro código de seguridad
+     */
     private void showForgotPwdDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("¿Olvidó su conbtraseña?");

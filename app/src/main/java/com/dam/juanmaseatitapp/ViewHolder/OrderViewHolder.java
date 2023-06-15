@@ -4,14 +4,16 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.dam.juanmaseatitapp.Interface.ItemClickListener;
 import com.dam.juanmaseatitapp.R;
 
+/**
+ * Clase usada para representar y manejar la vista de un elemento de pedido en un RecyclerView
+ */
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     // Atributos de clase
     public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderAddress;
-    private ItemClickListener itemClickListener;
 
+    // Constructor
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -23,10 +25,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
+    // Métodos
     @Override
     public void onClick(View view) {
         //itemClickListener.onClick(view, getAdapterPosition(), false);

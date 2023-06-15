@@ -1,6 +1,5 @@
 package com.dam.juanmaseatitapp.Database;
 
-//import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -16,12 +15,20 @@ import java.util.List;
  * y enviarlos a Firebase
  */
 public class Database extends SQLiteAssetHelper {
+    // Atributos de clase
     private static final String DB_NAME = "EatItDB.db";
     private static final int DB_VER = 1;
 
+    // Constructor
     public Database(Context context) { super(context, DB_NAME, null, DB_VER); }
 
-    //@SuppressLint("Range")
+    // Métodos
+
+    /**
+     * Método que nos devolverá el carro de compra completo del usuario, para luego poder enviarlo
+     * a la base de datos de Firebase
+     * @return Lista con los platos incluidos en el carro de compra
+     */
     public List<Order> getCarts() {
         final List<Order> result = new ArrayList<>();
 
@@ -53,6 +60,10 @@ public class Database extends SQLiteAssetHelper {
         return result;
     }
 
+    /**
+     * Método que permite la acción de añadir un plato de comida al carro de compra
+     * @param order Parámetro de tipo Order, el cual hace referencia al plato en cuestión
+     */
     public void addToCart(Order order) {
         SQLiteDatabase db = getWritableDatabase();
         String query = String.format("INSERT INTO OrderDetail(ProductId, ProductName, Quantity, Price, Discount, Image) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
@@ -66,16 +77,14 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
+    /**
+     * Este método permitirá limpiar el carro de compra
+     * @throws SQLException
+     */
     public void cleanCart() throws SQLException {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM OrderDetail");
 
-        db.execSQL(query);
-    }
-
-    public void removeFromCart(String productId, String phone) {
-        SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("DELETE * FROM OrderDetail WHERE UserPhone = '%s' AND ProductId = '%s'", phone, productId);
         db.execSQL(query);
     }
 
@@ -102,6 +111,12 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
+    /**
+     * Método que posee la utilidad de comprobar si un plato de comida tiene el estatus de
+     * "Favorito" o no lo tiene, devolviendo un boolean para ello
+     * @param foodId Parámetro identificador del plato de comida en cuestión
+     * @return Boolean que indicará si el plato de comida es "Favorito" o no lo es
+     */
     public boolean isFavorite(String foodId) {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("SELECT * FROM Favorites WHERE FoodId='%s';", foodId);

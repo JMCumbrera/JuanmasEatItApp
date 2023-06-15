@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Clase dedicada a la pantalla inicial de la aplicación, que se muestra durante breves momentos
+ */
 public class Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,6 +7,7 @@ import com.dam.juanmaseatitapp.Model.User;
 
 // Usuario actual logueado
 public class Common {
+    // Atributos de clase
     public static User currentUser;
     public static final String DELETE = "Eliminar";
     public static final String USER_KEY = "User";

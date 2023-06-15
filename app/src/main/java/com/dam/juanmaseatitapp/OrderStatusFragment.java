@@ -20,6 +20,9 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Fragmento que muestra el estado de los pedidos realizados
+ */
 public class OrderStatusFragment extends Fragment {
     // Atributos de clase
     private FragmentOrderStatusBinding binding;
@@ -52,6 +55,9 @@ public class OrderStatusFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Este método carga la lista de pedidos
+     */
     private void loadOrders(String phone) {
         adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(
                 Request.class,

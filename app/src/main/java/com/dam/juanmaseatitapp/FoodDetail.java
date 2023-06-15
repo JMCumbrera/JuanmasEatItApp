@@ -3,13 +3,10 @@ package com.dam.juanmaseatitapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Database.Database;
 import com.dam.juanmaseatitapp.Model.Food;
@@ -21,10 +18,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.shawnlin.numberpicker.NumberPicker;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Clase (Actividad) que muestra los detalles de un alimento específico
+ */
 public class FoodDetail extends AppCompatActivity {
+    // Atributos de clase
     TextView food_name, food_price, food_description;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
@@ -98,6 +98,10 @@ public class FoodDetail extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método diseñado para obtener los detalles de un plato en concreto pasado como parámetro
+     * @param foodId Identificador del plato cuyos detalles queremos obtener
+     */
     private void getDetailFood(String foodId) {
         foods.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -117,9 +121,7 @@ public class FoodDetail extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

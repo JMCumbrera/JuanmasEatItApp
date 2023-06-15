@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Clase responsable de gestionar la visualización de los elementos del carro en un RecyclerView
+ */
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     // Atributos de clase
     private List<Order> listData = new ArrayList<>();
@@ -26,6 +29,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         this.context = context;
     }
 
+    /**
+     * Método que se encarga de inflar el diseño del elemento de la vista del carrito "cart_layout"
+     * y devuelve un nuevo objeto "CartViewHolder" que contiene la vista inflada
+     * @param parent ViewGroup en el que se agregará la nueva vista después de vincularla a
+     *               una posición del adaptador (adapter)
+     * @param viewType El tipo de vista de la nueva Vista
+     * @return Objeto de tipo CartViewHolder que contiene la vista inflada
+     */
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +45,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         return new CartViewHolder(itemView);
     }
 
+    /**
+     * Este método se utiliza para establecer los datos en cada elemento de la vista del carro
+     * @param holder El ViewHolder que debe actualizarse para representar el contenido del elemento
+     *               en la posición dada en el conjunto de datos
+     * @param position La posición del elemento dentro del conjunto de datos del adaptador
+     */
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Picasso.with(context)
@@ -67,7 +84,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         return listData.size();
     }
 
-    // Interfaz y Setter para click events
+    // Interfaz y Setter para eventos de clic (click events)
     public interface OnItemClickListener { void onItemClick(int position); }
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;

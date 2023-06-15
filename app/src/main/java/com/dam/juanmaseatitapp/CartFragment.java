@@ -9,16 +9,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.dam.juanmaseatitapp.Model.Order;
 import com.dam.juanmaseatitapp.ViewHolder.CartAdapter;
 import com.dam.juanmaseatitapp.databinding.FragmentCartBinding;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragmento que muestra el contenido del carrito de compras
+ */
 public class CartFragment extends Fragment {
     // Attributos de clase
     private FragmentCartBinding binding;
@@ -26,8 +27,6 @@ public class CartFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     FirebaseDatabase database;
     DatabaseReference requests;
-    //TextView txtTotalPrice;
-    //AppCompatButton btnPlace;
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
@@ -47,6 +46,4 @@ public class CartFragment extends Fragment {
 
         return root;
     }
-
-
 }

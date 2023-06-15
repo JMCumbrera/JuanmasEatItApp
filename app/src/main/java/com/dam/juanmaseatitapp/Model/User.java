@@ -1,17 +1,14 @@
 package com.dam.juanmaseatitapp.Model;
 
+/**
+ * Clase que representa a los usuarios de la aplicación
+ */
 public class User {
     // Atributos relacionados con los campos de la BD
     private String Name, Password, Phone, IsStaff, secureCode;
 
     // Constructores
     public User() {}
-
-    /*public User(String name, String password, String phone) {
-        Name = name;
-        Password = password;
-        Phone = phone;
-    }*/
 
     public User(String name, String password, String secureCode) {
         Name = name;

@@ -4,13 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Toast;
-
 import com.dam.juanmaseatitapp.Common.Common;
 import com.dam.juanmaseatitapp.Database.Database;
 import com.dam.juanmaseatitapp.Model.Food;
@@ -23,10 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase encargada de mostrar la lista de platos en cada categoría.
+ */
 public class FoodList extends AppCompatActivity {
     // Atributos de clase
     RecyclerView recyclerView;
@@ -114,6 +114,10 @@ public class FoodList extends AppCompatActivity {
         });
     }
 
+    /**
+     * Método que permite comenzar con la búsqueda de un plato a través de la barra de búsqueda
+     * @param text Texto introducido en la barra
+     */
     private void startSearch(CharSequence text) {
         searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(
                 Food.class,
@@ -143,6 +147,9 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setAdapter(searchAdapter);
     }
 
+    /**
+     * Método que cargará las sugerencias en la barra de búsqueda
+     */
     private void loadSuggest() {
         foodList.orderByChild(String.valueOf("MenuId".equals(categoryId)))
                 .addValueEventListener(new ValueEventListener() {
@@ -211,7 +218,7 @@ public class FoodList extends AppCompatActivity {
             }
         };
 
-        // Set Adapter
+        // Establecemos el aadaptador (Adapter)
         recyclerView.setAdapter(adapter);
     }
 }

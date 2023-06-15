@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Actividad que muestra el contenido del carrito de compras
+ */
 public class Cart extends AppCompatActivity {
     // Atributos de clase
     RecyclerView recyclerView;
